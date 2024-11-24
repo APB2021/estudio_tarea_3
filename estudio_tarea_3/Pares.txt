@@ -1,0 +1,8 @@
+
+en otro fichero de texto (que también se solicitará por teclado).
+Ejercicio 2
+Crea un programa que solicita 3 ficheros de texto (2 de lectura y 1 de escritura), y escriba en el 
+fichero). El contenido final debe ser el de ambos ficheros de lectura entremezcladas las líneas.
+Ejercicio 3
+Crea un programa que solicita 1 fichero de texto ya existente y con contenido y añada al final 
+“salir”
