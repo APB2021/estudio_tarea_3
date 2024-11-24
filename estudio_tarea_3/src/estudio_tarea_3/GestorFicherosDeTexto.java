@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class GestorFicherosDeTexto {
@@ -58,16 +59,71 @@ public class GestorFicherosDeTexto {
 
 			String linea1, linea2 = null;
 
-			while (((linea1 = br1.readLine()) != null) || ((linea2 = br2.readLine()) != null)) {
-				bw.write(linea1);
-				bw.write(linea2);
+			// Alternar líneas entre ambos ficheros mientras haya contenido
+			while (true) {
+				// Leer una línea de cada fichero, si está disponible
+				if ((linea1 = br1.readLine()) != null) {
+					bw.write(linea1);
+					bw.newLine();
+				}
+				if ((linea2 = br2.readLine()) != null) {
+					bw.write(linea2);
+					bw.newLine();
+				}
+				// Salir del bucle cuando ambos ficheros estén agotados
+				if (linea1 == null && linea2 == null) {
+					break;
+				}
 			}
 
-		} catch (Exception e) {
+			System.out.println("Creado  fichero resultante: " + ficheroDeTextoResultante.getName());
 
+		} catch (IOException e) {
+			System.err.println("Error al procesar los ficheros " + e.getMessage());
 		}
 
 		return ficheroDeTextoResultante;
 
 	}
+
+	/**
+	 * Añade texto a un fichero existente. El texto se escribe al final del fichero.
+	 * Si el usuario escribe "salir", el proceso termina.
+	 */
+	public void aniadeTextoaFicheroExistente() {
+		File ficheroTextoAniadido = solicitarFicheroDeTexto();
+
+		// Validar existencia y contenido del fichero
+		if (!ficheroTextoAniadido.exists()) {
+			System.out.println("El fichero " + ficheroTextoAniadido.getName() + " no existe.");
+			return; // Salir del método
+		}
+		if (ficheroTextoAniadido.length() <= 0) {
+			System.out.println("El fichero " + ficheroTextoAniadido.getName() + " no tiene contenido.");
+			return; // Salir del método
+		}
+
+		System.out.println("Escriba el texto que desee añadir a " + ficheroTextoAniadido.getName()
+				+ " o escriba \"salir\" para terminar.");
+
+		// Proceso de añadir texto al fichero
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(ficheroTextoAniadido, true))) {
+			while (true) {
+				String textoAniadido = sc.nextLine();
+				if (textoAniadido.contains("salir")) {
+					System.out
+							.println("Proceso terminado. Texto añadido al fichero: " + ficheroTextoAniadido.getName());
+					break; // Salir del bucle
+				}
+
+				// Añadir texto al fichero con un salto de línea
+				bw.write(textoAniadido);
+				bw.newLine();
+				System.out.println("Texto añadido. Continúe escribiendo o escriba \"salir\" para finalizar.");
+			}
+		} catch (IOException e) {
+			System.err.println("Error al escribir en el fichero: " + e.getMessage());
+		}
+	}
+
 }
